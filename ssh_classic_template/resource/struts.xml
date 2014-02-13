@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	  <constant name="struts.devMode" value="true" />
+	  <constant name="struts.custom.i18n.resources" value="i18n.resource" />
+	  <package name="ssh" extends="jfreechart-default" namespace="/">
+	  	<interceptors>
+	  		<interceptor name="validateLogin" class="com.siminglun.ssh.interceptor.ValidateLogin">
+	  			<param name="excludeMethods">execute</param>
+	  		</interceptor>
+	  		<interceptor-stack name="validateLogin_statck">
+	  			<interceptor-ref name="defaultStack"></interceptor-ref>
+	  			<interceptor-ref name="validateLogin"></interceptor-ref>
+	  		</interceptor-stack>
+	  	</interceptors>
+	  	<default-interceptor-ref name="validateLogin_statck"></default-interceptor-ref>
+	  	<global-results>
+	  		<result name="login">/index.jsp</result>
+	  	</global-results>
+	  
+	  	<action name="demoAction" class="demoAction">
+	  		<interceptor-ref name="validateLogin_statck" />
+	  		<!-- 增加令牌拦截器 -->
+	  		<interceptor-ref name="token">
+	  			<!-- 定义拦截方法 -->
+	  			<param name="includeMethods">save,update</param>
+	  		</interceptor-ref>
+	  		<result name="success">/jsp/welcome.jsp</result>
+	  		<result name="error">/index.jsp</result>
+	  		<result name="users">/jsp/users.jsp</result>
+	  		<result name="del" type="redirectAction">
+	  			<param name="actionName">demoAction!query</param>
+	  		</result>
+	  		<result name="update" type="redirectAction">
+	  			demoAction!query
+	  		</result>
+	  		<result name="invalid.token">/jsp/welcome.jsp</result>
+	  	</action>
+	  	<action name="jFreeChartAction" class="jFreeChartAction">
+	  		<result type="chart">  
+                <param name="width">200</param>  
+                <param name="height">300</param>  
+            </result> 
+            <!-- <result name="jfreechart" type="chart">
+            	<param name="width">200</param>  
+                <param name="height">300</param>  
+            </result> -->
+	  	</action>
+	  	<action name="exportAction" class="exportAction">
+	  		<result name="success" type="redirectAction">exportAction!query</result>
+	  		<result name="error">/index.jsp</result>
+	  		<result name="users">/jsp/exportusers.jsp</result>
+	  	</action>
+	  </package>
+	  <package name="jsonDemo" extends="json-default">
+	  	<action name="jsonAction" class="jsonAction">
+	  		<!-- 返回单个值的result -->   
+            <result name="message" type="json">
+            	<param name="excludeProperties">.*hibernateLazyInitializer</param>
+            </result>   
+            <!-- 返回UserInfo对象的 -->   
+            <result name="userInfo" type="json">
+            	<param name="excludeProperties">.*hibernateLazyInitializer</param>
+            </result>   
+            <!-- 返回List对象的 -->   
+            <result name="list" type="json">
+            	<param name="excludeProperties">.*hibernateLazyInitializer</param>
+            </result>   
+            <!-- 返回Map对象的 -->   
+            <result name="map" type="json">
+            	<param name="excludeProperties">.*hibernateLazyInitializer</param>
+            </result> 
+	  	</action>
+	  </package>
+</struts>

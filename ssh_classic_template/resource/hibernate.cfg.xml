@@ -1,0 +1,43 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!-- 统一配置文件,公共的配置 -->
+<hibernate-configuration>
+	<session-factory>
+		<!-- 方言，是指数据库在执行时的差异 -->
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.MySQL5Dialect
+		</property>
+		<property name="show_sql">true</property>
+		<!-- <property name="format_sql">true</property> -->
+		<!-- 打开统计信息 -->
+		<property name="hibernate.generate_statistics">true</property>
+		<property name="javax.persistence.validation.mode">none</property>
+		<!-- 配置session的线程本地化 threadLocal -->
+		<property name="current_session_context_class">thread</property>
+		<!-- 
+		值有几种情况：
+		validate:
+		当hibernate加载数据库时，会检验数据库的结构
+		update:
+		当hibernate加载数据库时，如果数据库存在，则进行更新，如果不存在则创建
+		create:
+		当hibernate加载数据库时,每次加载都会创建数据库
+		create-drop:
+		当hibernate加载数据库时,创建，退出时删除
+		-->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		<!-- 打开二级缓存 -->
+		<property name="cache.use_second_level_cache">true</property>
+		<!-- 打开查询缓存 -->
+		<property name="cache.use_query_cache">true</property>
+		<!-- 二级缓存的管理类 -->
+		<!-- <property name="cache.provider_class">org.hibernate.cache.EhCacheProvider</property> -->
+		<!--二级缓存管理类升级 -->
+		<property name="cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</property>
+		<!--二级缓存升级可以指定ehcache配置文件，但必须要使用ehcache2.4 -->
+		<property name="net.sf.ehcache.configurationResourceName">ehcache.xml</property>
+		<class-cache usage="read-write" class="com.siminglun.ssh.pojo.Users"/>
+	</session-factory>
+	
+</hibernate-configuration>
